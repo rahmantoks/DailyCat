@@ -2,16 +2,15 @@ package com.dailycat.service;
 
 import com.dailycat.model.Breed;
 import com.dailycat.model.Cat;
+import com.dailycat.model.CatImageResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CatService {
@@ -43,18 +42,28 @@ public class CatService {
                 return fallbackCat();
             }
 
-            String catId = getCatId();
-            System.out.println("Fetched cat image ID: " + catId);
-            Cat cat = getCatById(catId);
-            return cat;
+            CatImageResponse imageResponse = getCatImageWithBreed();
+            if (imageResponse == null || imageResponse.getBreeds() == null || imageResponse.getBreeds().isEmpty()) {
+                return fallbackCat();
+            }
+            
+            String breedId = imageResponse.getBreeds().get(0).getId();
+            System.out.println("Fetched breed ID: " + breedId);
+            Breed breedDetail = getBreedById(breedId);
+            System.out.println("Fetched breed detail: " + breedDetail);
+            
+            return new Cat(
+                imageResponse.getId(),
+                imageResponse.getUrl(),
+                breedDetail != null ? List.of(breedDetail) : imageResponse.getBreeds()
+            );
         } catch (Exception ex) {
             return fallbackCat();
         }
     }
 
-    private String getCatId(){
-        // The Cat API: GET /images/search returns an array of image objects
-        Mono<List<Map<String, Object>>> mono = webClient.get()
+    private CatImageResponse getCatImageWithBreed() {
+        CatImageResponse[] responses = webClient.get()
             .uri(uriBuilder -> uriBuilder.path("/images/search")
                     .queryParam("size", "med")
                     .queryParam("mime_types", "jpg,png")
@@ -64,75 +73,23 @@ public class CatService {
                     .build())
             .header("x-api-key", apiKey)
             .retrieve()
-            .bodyToMono(new org.springframework.core.ParameterizedTypeReference<List<Map<String, Object>>>() {});
+            .bodyToMono(CatImageResponse[].class)
+            .block();
 
-        List<Map<String, Object>> result = mono.block();
-        if (result == null || result.isEmpty()) {
-            return null;
-        }
-        Map<String, Object> first = result.get(0);
-        return string(first.get("id"));
+        return (responses != null && responses.length > 0) ? responses[0] : null;
     }
 
-    private Cat getCatById(String catId) {
-        // The Cat API: GET /images/{image_id} to get more details
-        Mono<Map<String, Object>> detailMono = webClient.get()
-            .uri("/images/{id}", catId)
-            .header("x-api-key", apiKey)
-            .retrieve()
-            .bodyToMono(new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {});
-        Map<String, Object> detail = detailMono.block();
-        if (detail == null) {
-            return null;
-        } else {
-            System.out.println("Fetched cat detail: " + detail);
-            String breedId = null;
-            Object breedsObj = detail.get("breeds");
-            if (breedsObj instanceof List) {
-                List<?> breedsList = (List<?>) breedsObj;
-                if (!breedsList.isEmpty() && breedsList.get(0) instanceof Map) {
-                    Map<String, Object> firstBreed = (Map<String, Object>) breedsList.get(0);
-                    breedId = string(firstBreed.get("id"));
-                }
-            }
-
-            Breed breed = getBreedsById(breedId);
-
-            return new Cat(
-                string(detail.get("id")),
-                string(detail.get("url")),
-                List.of(breed)
-            );
-        }
-    }
-
-    private Breed getBreedsById(String breedId) {
-        // The Cat API: GET /breeds/{breed_id} to get breed details
-        Mono<Map<String, Object>> breedMono = webClient.get()
-            .uri("/breeds/{id}", breedId) // Example breed ID
-            .header("x-api-key", apiKey)
-            .retrieve()
-            .bodyToMono(new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {});
-        Map<String, Object> breedDetail = breedMono.block();
-        if (breedDetail != null) {
-            System.out.println("Fetched breed detail: " + breedDetail);
-            String id = string(breedDetail.get("id"));
-            String name = string(breedDetail.get("name"));
-            String temperament = string(breedDetail.get("temperament"));
-            String origin = string(breedDetail.get("origin"));
-            String lifeSpan = string(breedDetail.get("life_span"));
-            String wikipediaUrl = string(breedDetail.get("wikipedia_url"));
-            return Breed.builder()
-                .id(id)
-                .name(name)
-                .temperament(temperament)
-                .origin(origin)
-                .lifeSpan(lifeSpan)
-                .wikipediaUrl(wikipediaUrl)
-                .build();
-        } else {
+    private Breed getBreedById(String breedId) {
+        if (breedId == null || breedId.isBlank()) {
             return null;
         }
+        
+        return webClient.get()
+            .uri("/breeds/{id}", breedId)
+            .header("x-api-key", apiKey)
+            .retrieve()
+            .bodyToMono(Breed.class)
+            .block();
     }
 
     private Cat fallbackCat() {
@@ -145,14 +102,10 @@ public class CatService {
                         .name("Bengal")
                         .temperament("Energetic, Intelligent, Gentle")
                         .origin("United States")
-                        .description("12-16 years")
+                        .lifeSpan("12-16 years")
                         .wikipediaUrl("https://en.wikipedia.org/wiki/Bengal_(cat)")
                         .build()
                 )
         );
-    }
-
-    private String string(Object o) {
-        return o == null ? null : o.toString();
     }
 }

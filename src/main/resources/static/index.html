@@ -66,10 +66,11 @@
           const res = await fetch('/api/cat-of-the-day');
           if (!res.ok) throw new Error('API error ' + res.status);
           const cat = await res.json();
+          console.log('Fetched cat:', cat);
           document.getElementById('cat-name').textContent = cat.breeds[0].name || 'Mystery Cat';
           document.getElementById('cat-desc').textContent = cat.breeds[0].temperament || '';
-          document.getElementById('wikipedia-link').textContent = cat.breeds[0].wikipediaUrl ? 'Learn more on Wikipedia' : '';
-          document.getElementById('wikipedia-link').href = cat.breeds[0].wikipediaUrl || '';
+          document.getElementById('wikipedia-link').textContent = cat.breeds[0].wikipedia_url ? 'Learn more on Wikipedia' : '';
+          document.getElementById('wikipedia-link').href = cat.breeds[0].wikipedia_url || '';
           const img = document.getElementById('cat-img');
           img.src = cat.imageUrl || '';
           img.alt = (cat.breeds[0].name ? cat.breeds[0].name + ' — ' : '') + 'Cat of the day';

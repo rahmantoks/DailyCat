@@ -45,6 +45,7 @@
           <div class="info">
             <h1 id="cat-name">Loading…</h1>
             <p id="cat-desc"></p>
+            <a id="wikipedia-link" href="" target="_blank" rel="noopener noreferrer"></a>
           </div>
         </div>
         <div class="footer">
@@ -67,6 +68,8 @@
           const cat = await res.json();
           document.getElementById('cat-name').textContent = cat.name || 'Mystery Cat';
           document.getElementById('cat-desc').textContent = cat.description || '';
+          document.getElementById('wikipedia-link').textContent = cat.breeds.wikipediaUrl ? 'Learn more on Wikipedia' : '';
+          document.getElementById('wikipedia-link').href = cat.breeds.wikipediaUrl || '';
           const img = document.getElementById('cat-img');
           img.src = cat.imageUrl || '';
           img.alt = (cat.name ? cat.name + ' — ' : '') + 'Cat of the day';

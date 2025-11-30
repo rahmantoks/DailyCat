@@ -1,0 +1,7 @@
+catapi:
+  base-url: https://api.thecatapi.com/v1
+  api-key: ${CAT_API_KEY:}
+
+spring:
+  main:
+    web-application-type: servlet

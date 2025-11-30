@@ -3,6 +3,8 @@ package com.dailycat.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 public class CatTest {
 
     @Test
@@ -10,7 +12,7 @@ public class CatTest {
         Cat c = new Cat();
         c.setId("Whiskers");
         c.setImageUrl("https://example.com/w.jpg");
-        c.setBreeds(new Breeds());
+        c.setBreeds(List.of(new Breed()));
 
         assertEquals("Whiskers", c.getId());
         assertEquals("https://example.com/w.jpg", c.getImageUrl());

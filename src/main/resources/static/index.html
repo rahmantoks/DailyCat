@@ -66,13 +66,13 @@
           const res = await fetch('/api/cat-of-the-day');
           if (!res.ok) throw new Error('API error ' + res.status);
           const cat = await res.json();
-          document.getElementById('cat-name').textContent = cat.breeds.name || 'Mystery Cat';
-          document.getElementById('cat-desc').textContent = cat.breeds.temperament || '';
-          document.getElementById('wikipedia-link').textContent = cat.breeds.wikipediaUrl ? 'Learn more on Wikipedia' : '';
-          document.getElementById('wikipedia-link').href = cat.breeds.wikipediaUrl || '';
+          document.getElementById('cat-name').textContent = cat.breeds[0].name || 'Mystery Cat';
+          document.getElementById('cat-desc').textContent = cat.breeds[0].temperament || '';
+          document.getElementById('wikipedia-link').textContent = cat.breeds[0].wikipediaUrl ? 'Learn more on Wikipedia' : '';
+          document.getElementById('wikipedia-link').href = cat.breeds[0].wikipediaUrl || '';
           const img = document.getElementById('cat-img');
           img.src = cat.imageUrl || '';
-          img.alt = (cat.breeds.name ? cat.breeds.name + ' — ' : '') + 'Cat of the day';
+          img.alt = (cat.breeds[0].name ? cat.breeds[0].name + ' — ' : '') + 'Cat of the day';
           status.textContent = 'Here’s your daily feline friend!';
         } catch (e) {
           err.textContent = 'Failed to load cat: ' + e.message;

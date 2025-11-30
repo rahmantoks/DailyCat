@@ -1,5 +1,6 @@
 package com.dailycat.service;
 
+import com.dailycat.model.Breeds;
 import com.dailycat.model.Cat;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class CatService {
                         .queryParam("mime_types", "jpg,png")
                         .queryParam("order", "RANDOM")
                         .queryParam("limit", 1)
+                        .queryParam("has_breeds", 1)
                         .build())
                 .header("x-api-key", apiKey)
                 .retrieve()
@@ -59,7 +61,7 @@ public class CatService {
             }
             Map<String, Object> item = result.get(0);
             String id = string(item.get("id"));
-
+            System.out.println("Fetched cat image ID: " + id);
             // The Cat API: GET /images/{image_id} to get more details
             Mono<Map<String, Object>> detailMono = webClient.get()
                 .uri("/images/{id}", id)
@@ -67,19 +69,40 @@ public class CatService {
                 .retrieve()
                 .bodyToMono(new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {});
             Map<String, Object> detail = detailMono.block();
+            System.out.println("Fetched cat detail: " + detail);
             if (detail == null) {
                 return fallbackCat();
             }
             String imageUrl = string(detail.get("url"));
-            String name = "Random Cat";
-            String description = "Fetched from The Cat API";
+            Breeds breeds = breedsFromDetail(detail);
+            String name = breeds != null ? breeds.getName() : "Unknown Cat";
+            String description = breeds != null ? breeds.getTemperament() : "No description available.";
             if (imageUrl == null || imageUrl.isBlank()) {
                 return fallbackCat();
             }
-            return new Cat(id, name, imageUrl, description);
+            return new Cat(id, name, imageUrl, description, breeds);
         } catch (Exception ex) {
             return fallbackCat();
         }
+    }
+
+    private Breeds breedsFromDetail(Map<String,Object> detail) {
+        Object breedsObj = detail.get("breeds");
+        if (breedsObj instanceof List) {
+            List<?> breedsList = (List<?>) breedsObj;
+            if (!breedsList.isEmpty() && breedsList.get(0) instanceof Map) {
+                Map<String, Object> breedMap = (Map<String, Object>) breedsList.get(0);
+                String id = string(breedMap.get("id"));
+                String name = string(breedMap.get("name"));
+                String temperament = string(breedMap.get("temperament"));
+                String origin = string(breedMap.get("origin"));
+                String description = string(breedMap.get("description"));
+                String lifeSpan = string(breedMap.get("life_span"));
+                String wikipediaUrl = string(breedMap.get("wikipedia_url"));
+                return new Breeds(id, name, temperament, origin, description, lifeSpan, wikipediaUrl);
+            }
+        }
+        return null;
     }
 
     private Cat fallbackCat() {
@@ -87,7 +110,8 @@ public class CatService {
                 "id",
                 "Luna",
                 "https://cdn2.thecatapi.com/images/MTk3ODIyOQ.jpg",
-                "Curious tabby cat who adores window watching and treats."
+                "Curious tabby cat who adores window watching and treats.",
+                new Breeds("beng", "Bengal", "Energetic, Intelligent, Gentle", "United States", "The Bengal is a domesticated cat breed created from hybrids of domestic cats and the Asian leopard cat.", "12-16 years", "https://en.wikipedia.org/wiki/Bengal_(cat)")
         );
     }
 

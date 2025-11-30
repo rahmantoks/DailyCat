@@ -38,7 +38,7 @@ public class CatControllerTest {
             return new com.dailycat.service.CatService(org.springframework.web.reactive.function.client.WebClient.builder().baseUrl("http://localhost").build(), "") {
                 @Override
                 public Cat getRandomCat() {
-                    return new Cat("id", "Unit Cat", "https://example.com/cat.jpg", "Test cat");
+                    return new Cat("id", "Unit Cat", "https://example.com/cat.jpg", "Test cat", null);
                 }
             };
         }

@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cat {
+public class Breeds {
     private String id;
     private String name;
-    private String imageUrl;
+    private String temperament;
+    private String origin;
     private String description;
-    private Breeds breeds;
+    private String lifeSpan;
+    private String wikipediaUrl;
 }

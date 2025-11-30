@@ -4,7 +4,7 @@ A minimal full-stack app with a Spring Boot backend and a static frontend showin
 
 ## Backend
 - Endpoint: `/api/cat-of-the-day` returns JSON with `name`, `imageUrl`, `description`.
-- Technology: Spring Boot 3 (Java 17), Gradle build.
+- Technology: Spring Boot 3 (Java 21), Maven build.
 
 ## Frontend
 - Served from `src/main/resources/static/index.html`.
@@ -29,7 +29,7 @@ mvn -q -DskipTests package
 mvn spring-boot:run
 ```
 Open `http://localhost:8080`.
--
+ 
 ## Project Structure
 - `src/main/java/com/dailycat/DailyCatApplication.java`: Spring Boot app entry
 - `src/main/java/com/dailycat/controller/CatController.java`: REST API
@@ -41,3 +41,15 @@ Open `http://localhost:8080`.
 ## Notes
 - Currently returns a hardcoded sample cat.
 - CORS not required since frontend is served by the same server.
+
+## Configuration
+- `src/main/resources/application.yml` reads The Cat API settings:
+	- `catapi.base-url` defaults to `https://api.thecatapi.com/v1`.
+	- `catapi.api-key` is read from the environment variable `CAT_API_KEY` when set.
+- Without `CAT_API_KEY`, the service falls back to a local, hardcoded cat response.
+
+### Set API key (optional)
+```bash
+export CAT_API_KEY="<your-key>"
+mvn spring-boot:run
+```

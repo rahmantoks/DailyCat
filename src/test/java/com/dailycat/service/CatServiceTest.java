@@ -14,7 +14,7 @@ public class CatServiceTest {
         CatService service = new CatService(webClient, "");
         Cat cat = service.getRandomCat();
         assertNotNull(cat);
-        assertEquals("Luna", cat.getName());
+        assertEquals("id", cat.getId());
         assertNotNull(cat.getImageUrl());
     }
 
@@ -25,7 +25,7 @@ public class CatServiceTest {
         CatService service = new CatService(webClient, "fake-key");
         Cat cat = service.getRandomCat();
         assertNotNull(cat);
-        assertEquals("Luna", cat.getName());
+        assertEquals("id", cat.getId());
         assertNotNull(cat.getImageUrl());
     }
 }

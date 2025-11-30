@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Cat {
     private String id;
-    private String name;
     private String imageUrl;
-    private String description;
     private Breeds breeds;
 }

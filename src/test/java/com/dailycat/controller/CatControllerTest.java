@@ -27,7 +27,7 @@ public class CatControllerTest {
 
         mockMvc.perform(get("/api/cat-of-the-day"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Unit Cat"))
+                .andExpect(jsonPath("$.id").value("id"))
                 .andExpect(jsonPath("$.imageUrl").value("https://example.com/cat.jpg"));
     }
 
@@ -38,7 +38,7 @@ public class CatControllerTest {
             return new com.dailycat.service.CatService(org.springframework.web.reactive.function.client.WebClient.builder().baseUrl("http://localhost").build(), "") {
                 @Override
                 public Cat getRandomCat() {
-                    return new Cat("id", "Unit Cat", "https://example.com/cat.jpg", "Test cat", null);
+                    return new Cat("id", "https://example.com/cat.jpg", null);
                 }
             };
         }

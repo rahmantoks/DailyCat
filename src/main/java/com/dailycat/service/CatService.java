@@ -75,12 +75,10 @@ public class CatService {
             }
             String imageUrl = string(detail.get("url"));
             Breeds breeds = breedsFromDetail(detail);
-            String name = breeds != null ? breeds.getName() : "Unknown Cat";
-            String description = breeds != null ? breeds.getTemperament() : "No description available.";
             if (imageUrl == null || imageUrl.isBlank()) {
                 return fallbackCat();
             }
-            return new Cat(id, name, imageUrl, description, breeds);
+            return new Cat(id, imageUrl, breeds);
         } catch (Exception ex) {
             return fallbackCat();
         }
@@ -108,9 +106,7 @@ public class CatService {
     private Cat fallbackCat() {
         return new Cat(
                 "id",
-                "Luna",
                 "https://cdn2.thecatapi.com/images/MTk3ODIyOQ.jpg",
-                "Curious tabby cat who adores window watching and treats.",
                 new Breeds("beng", "Bengal", "Energetic, Intelligent, Gentle", "United States", "The Bengal is a domesticated cat breed created from hybrids of domestic cats and the Asian leopard cat.", "12-16 years", "https://en.wikipedia.org/wiki/Bengal_(cat)")
         );
     }

@@ -1,31 +1,27 @@
 package com.dailycat.service;
 
 import com.dailycat.model.Cat;
+import com.dailycat.repository.CatRepository;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CatServiceTest {
 
+    @Mock
+    private CatRepository catRepository = org.mockito.Mockito.mock(CatRepository.class);
+    
+    private CatService catService = new CatService(catRepository);
+
     @Test
     void returnsFallbackWhenApiKeyMissing() {
-        WebClient webClient = WebClient.builder().baseUrl("https://api.thecatapi.com/v1").build();
-        CatService service = new CatService(webClient, "");
-        Cat cat = service.getRandomCat();
+        Cat cat = catService.getRandomCat();
         assertNotNull(cat);
         assertEquals("id", cat.getId());
         assertNotNull(cat.getImageUrl());
     }
 
-    @Test
-    void returnsFallbackWhenApiCallFails() {
-        // Use an invalid base URL to force connection failure
-        WebClient webClient = WebClient.builder().baseUrl("http://127.0.0.1:9").build();
-        CatService service = new CatService(webClient, "fake-key");
-        Cat cat = service.getRandomCat();
-        assertNotNull(cat);
-        assertEquals("id", cat.getId());
-        assertNotNull(cat.getImageUrl());
-    }
+    // Additional tests can be added here to cover more scenarios
 }

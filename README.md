@@ -29,6 +29,15 @@ mvn -q -DskipTests package
 mvn spring-boot:run
 ```
 Open `http://localhost:8080`.
+
+## Public Access (via ngrok)
+The app is publicly accessible at:
+**https://semivocal-walton-enchantedly.ngrok-free.dev/**
+
+To expose your local instance:
+```bash
+ngrok http 8080
+```
  
 ## Project Structure
 - `src/main/java/com/dailycat/DailyCatApplication.java`: Spring Boot app entry

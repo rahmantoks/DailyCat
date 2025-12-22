@@ -1,0 +1,263 @@
+/* Theme Variables */
+:root {
+	--bg: #0f172a;
+	--card: #111827;
+	--text: #e5e7eb;
+	--muted: #9ca3af;
+	--accent: #22d3ee;
+}
+
+/* Base Layout */
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+	background: linear-gradient(180deg, #0b1220, #0f172a);
+	color: var(--text);
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+}
+
+.container {
+	width: 100%;
+	max-width: 820px;
+	padding: 24px;
+}
+
+/* Card + Header */
+.card {
+	background: rgba(17, 24, 39, 0.8);
+	backdrop-filter: blur(6px);
+	border: 1px solid #1f2937;
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+	transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.card.loading {
+	opacity: 0.5;
+	transform: scale(0.995);
+}
+
+header {
+	padding: 20px 24px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #1f2937;
+}
+
+.logo {
+	font-weight: 600;
+	letter-spacing: 0.2px;
+}
+
+.mode-toggle {
+	display: flex;
+	gap: 8px;
+	background: #1f2937;
+	padding: 4px;
+	border-radius: 12px;
+}
+
+.mode-btn {
+	background: transparent;
+	border: none;
+	color: var(--muted);
+	padding: 6px 12px;
+	border-radius: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+	color: var(--text);
+}
+
+.mode-btn.active {
+	background: var(--card);
+	color: var(--text);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.hidden {
+	display: none !important;
+}
+
+/* Content + Image */
+.content {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0;
+}
+
+.image-wrap {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+}
+
+img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	cursor: pointer;
+}
+
+.fade {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(0deg, rgba(17, 24, 39, 0.85) 0%, rgba(17, 24, 39, 0) 60%);
+	pointer-events: none;
+}
+
+.fade-in {
+	opacity: 0;
+	transform: scale(1.01);
+	transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.fade-in.show {
+	opacity: 1;
+	transform: none;
+}
+
+/* Loader */
+.loader {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	background: rgba(17, 24, 39, 0.35);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+
+.loader.visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.spinner {
+	width: 56px;
+	height: 56px;
+	border: 4px solid rgba(255, 255, 255, 0.15);
+	border-top-color: var(--accent);
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Info + Footer */
+.info {
+	padding: 20px 24px;
+	display: grid;
+	gap: 10px;
+}
+
+h1 {
+	margin: 0;
+	font-size: 22px;
+}
+
+p {
+	margin: 0;
+	color: var(--muted);
+}
+
+.footer {
+	padding: 16px 24px;
+	border-top: 1px solid #1f2937;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.btn {
+	background: #0ea5e9;
+	color: white;
+	border: none;
+	padding: 10px 14px;
+	border-radius: 10px;
+	cursor: pointer;
+	font-weight: 600;
+}
+
+.btn:disabled {
+	background: #1f2937;
+	color: #6b7280;
+	cursor: not-allowed;
+}
+
+.error {
+	color: #fda4af;
+	padding: 12px 24px;
+}
+
+/* Modal overlay for breed details */
+.modal {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.modal.hidden {
+	display: none;
+}
+
+.modal-content {
+	background: var(--card);
+	padding: 20px;
+	border-radius: 12px;
+	max-width: 90%;
+	max-height: 80%;
+	overflow-y: auto;
+	color: var(--text);
+	position: relative;
+}
+
+.modal-close {
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	color: var(--muted);
+}
+
+.chart-container {
+	position: relative;
+	height: 300px;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.breed-stats-text {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.breed-stats-text li {
+	margin-bottom: 4px;
+}

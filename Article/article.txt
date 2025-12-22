@@ -1,0 +1,67 @@
+Google Antigravityによるアプリ開発
+
+1. イントロ、antigravityについて
+2. やりたいこと説明
+ a. Antigravityを使って既存コードベースを読ませる (個人プロジェクトDailyCatApp)
+ b. 新しい機能を追加する
+ c. 感想
+3. 実装
+4. 結果・結論
+
+近年、AI を活用した開発支援ツールが急速に進化しています。その中で今回試してみたのが Antigravity です。
+Antigravity は、既存のコードベースを読み込ませることで、構造理解や機能追加の補助を行ってくれるツールです。特に「自分で書いたが時間が経って理解コストが上がったコード」や「規模が大きくなってきた個人開発」に対して有効なのではないかと考え、今回検証してみました。
+
+本記事では、個人開発プロジェクトである DailyCatApp を題材に、Antigravity を使って
+・既存コードをどの程度理解してくれるのか
+・新機能追加がどれだけスムーズになるのか
+を試した結果をまとめます。
+
+今回対象としたのは、私の個人プロジェクトの DailyCatApp です。
+DailyCatApp は、ランダムな猫の写真を表示する簡単なWebアプリです。
+シンプルなSpringBoot + VanillaJsを使っています。
+
+まずはこのコードベース全体を Antigravity に読み込ませ、
+・アプリの構成を正しく理解できるか
+を確認しました。
+
+explain this codebaseで、分かりやすくプロジェクトの概要を書いてくれました。
+start the app で、内起動もできました。
+stop the appで、アプリを停止します。
+
+新しい機能として、猫の写真をクリックすると、詳細情報を表示するようにしたいと思います。
+1.写真をクリックすると詳細モーダル表示する (UI機能拡張)
+2.Dog of the dayを追加(新しい機能)
+
+1.
+プロンプト１
+lets improve the UI.
+makes it so that when the cat picture is clicked, it shows the user about the breeds in details.
+shows the breeds description and its stats (adaptability, energy level, affection level, inttellence etc).
+
+上記のプロンプトで、HTML,JS, CSSが修正されましたが、
+ページをリロードした後でも、画面をクリックできないため、確認しました。
+
+プロンプト２
+i cannot click the cat image
+
+cssの.fadeオーバーレイにブロックされたそうです。
+クリックすると詳細モーダルが表示されました！
+
+プロンプト３
+show the breeds stats using graph so its interesting.
+
+猫種の個性値をグラフ表示にできました！
+
+2.
+プロンプト１
+using similar design, create dog of the day end point. dog data can be fetched from thedogapi using key in DOG_API_KEY in the environment variables. create needed dto and repository accordingly..
+
+プロンプト２
+update the ui to allow showing dogs
+
+上記２つのプロンプトだけで犬の写真をすることができます
+
+感想・結論
+Antigravity を使ってみた結論としては、
+「既存コード理解と機能追加の初動を加速させるツールとして非常に有効」 という印象です。
+特にAntigravityはユーザのインプットに対して、TaskとImplementation Planを作成するので、ユーザがレビュー指摘することが可能です。

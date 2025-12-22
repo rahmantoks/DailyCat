@@ -13,6 +13,7 @@ import java.util.Map;
 public class AdminController {
 
     private final CatSyncService catSyncService;
+    private final com.dailycat.service.DogSyncService dogSyncService;
 
     /**
      * Manual trigger to sync cats from The Cat API
@@ -23,15 +24,32 @@ public class AdminController {
         try {
             int savedCount = catSyncService.syncCatsNow(count);
             return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Successfully synced " + savedCount + " cats",
-                "count", savedCount
-            ));
+                    "success", true,
+                    "message", "Successfully synced " + savedCount + " cats",
+                    "count", savedCount));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
-                "success", false,
-                "message", e.getMessage()
-            ));
+                    "success", false,
+                    "message", e.getMessage()));
+        }
+    }
+
+    /**
+     * Manual trigger to sync dogs from The Dog API
+     * Example: POST /api/admin/sync-dogs?count=10
+     */
+    @PostMapping("/sync-dogs")
+    public ResponseEntity<Map<String, Object>> syncDogs(@RequestParam(defaultValue = "10") int count) {
+        try {
+            int savedCount = dogSyncService.syncDogsNow(count);
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Successfully synced " + savedCount + " dogs",
+                    "count", savedCount));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", e.getMessage()));
         }
     }
 }

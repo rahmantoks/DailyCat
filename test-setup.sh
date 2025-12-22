@@ -49,6 +49,12 @@ echo "5. Syncing 10 cats from The Cat API to database..."
 SYNC_RESPONSE=$(curl -s -X POST "http://localhost:8080/api/admin/sync?count=10")
 echo "   Response: $SYNC_RESPONSE"
 
+# Sync dogs from API
+echo ""
+echo "5b. Syncing 10 dogs from The Dog API to database..."
+SYNC_DOG_RESPONSE=$(curl -s -X POST "http://localhost:8080/api/admin/sync-dogs?count=10")
+echo "   Response: $SYNC_DOG_RESPONSE"
+
 # Test random cat endpoint
 echo ""
 echo "6. Testing random cat endpoint..."
@@ -60,6 +66,8 @@ echo ""
 echo "7. Checking database contents..."
 sudo docker exec dailycat-db psql -U dailycat -d dailycat -c "SELECT COUNT(*) as cat_count FROM cats;"
 sudo docker exec dailycat-db psql -U dailycat -d dailycat -c "SELECT COUNT(*) as breed_count FROM breeds;"
+sudo docker exec dailycat-db psql -U dailycat -d dailycat -c "SELECT COUNT(*) as dog_count FROM dogs;"
+sudo docker exec dailycat-db psql -U dailycat -d dailycat -c "SELECT COUNT(*) as dog_breed_count FROM dog_breeds;"
 
 echo ""
 echo "======================================"

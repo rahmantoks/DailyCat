@@ -10,8 +10,8 @@ spring:
   
   datasource:
     url: jdbc:postgresql://localhost:5432/dailycat
-    username: dailycat
-    password: dailycat123
+    username: ${DAILYCAT_DB_USERNAME}
+    password: ${DAILYCAT_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   
   jpa:

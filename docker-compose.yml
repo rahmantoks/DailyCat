@@ -6,8 +6,8 @@ services:
     container_name: dailycat-db
     environment:
       POSTGRES_DB: dailycat
-      POSTGRES_USER: dailycat
-      POSTGRES_PASSWORD: dailycat123
+      POSTGRES_USER: ${DAILYCAT_DB_USERNAME}
+      POSTGRES_PASSWORD: ${DAILYCAT_DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:

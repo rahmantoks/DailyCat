@@ -37,9 +37,9 @@
 ## Database Connection
 
 - **Host**: localhost:5432
-- **Database**: dailycat
-- **Username**: dailycat
-- **Password**: dailycat123
+- **Database**: 
+- **Username**: 
+- **Password**: 
 
 ## Useful Commands
 

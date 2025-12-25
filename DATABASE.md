@@ -38,8 +38,8 @@
 
 - **Host**: localhost:5432
 - **Database**: 
-- **Username**: 
-- **Password**: 
+- **Username**:  ${DAILYCAT_DB_USERNAME}
+- **Password**:  ${DAILYCAT_DB_PASSWORD}
 
 ## Useful Commands
 
